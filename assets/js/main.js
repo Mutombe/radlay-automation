@@ -437,6 +437,7 @@
     };
     form.querySelectorAll('input[required]').forEach((input) => input.addEventListener('input', () => clear(input)));
     form.addEventListener('submit', (e) => {
+      e.preventDefault();
       const invalid = [...form.querySelectorAll('input[required]')].filter((input) => {
         clear(input);
         const text = message(input);
@@ -451,12 +452,19 @@
         return true;
       });
       if (invalid.length) {
-        e.preventDefault();
         status.classList.add('is-error');
         status.textContent = invalid.length === 1 ? 'One field needs attention.' : `${invalid.length} fields need attention.`;
         invalid[0].focus();
         return;
       }
+      // compose the email here rather than posting the form to mailto:, which browsers flag as insecure
+      const data = new FormData(form);
+      const line = (label, key) => (data.get(key) ? `${label}: ${data.get(key)}` : '');
+      const body = [line('Name', 'name'), line('Company', 'company'), line('Email', 'email'), line('Phone', 'phone'),
+        data.getAll('need').length ? `Needs: ${data.getAll('need').join(', ')}` : '', '', data.get('message') || '']
+        .filter((l, i) => l || i === 5).join('\n');
+      const subject = `Enquiry from ${data.get('name')}${data.get('company') ? `, ${data.get('company')}` : ''}`;
+      window.location.href = `mailto:${form.dataset.mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       status.classList.remove('is-error');
       status.textContent = 'Your email app should now open with the enquiry filled in. Press send there to reach our engineers.';
       button.setAttribute('aria-busy', 'true');
