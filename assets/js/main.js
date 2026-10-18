@@ -167,7 +167,220 @@
     setInterval(tick, 1000);
   }
 
-  // Subtle parallax on the hero gears
+  // Home hero slides. The active bar's fill animation is the timer, so anything that
+  // pauses the bar (Pause, hover, keyboard focus, off screen) pauses the slides too.
+  const slides = document.querySelector('.hero-slides');
+  if (slides) {
+    const photos = [...document.querySelectorAll('.hero-home .hero-photo')];
+    const dots = [...slides.querySelectorAll('.hero-dots button')];
+    const cap = slides.querySelector('.hero-cap');
+    const pause = slides.querySelector('.hero-pause');
+    let cur = 0;
+    const show = (n, byUser) => {
+      cur = (n + photos.length) % photos.length;
+      photos.forEach((p, i) => p.classList.toggle('is-on', i === cur));
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === cur)));
+      cap.querySelector('.num').textContent = String(cur + 1).padStart(2, '0');
+      cap.querySelector('[data-cap]').textContent = dots[cur].dataset.cap;
+      if (byUser) cap.setAttribute('aria-live', 'polite');
+    };
+    dots.forEach((d, i) => {
+      d.addEventListener('click', () => show(i, true));
+      d.addEventListener('keydown', (e) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (!step) return;
+        show(cur + step, true);
+        dots[cur].focus();
+      });
+    });
+    slides.addEventListener('animationend', (e) => {
+      if (e.animationName === 'heroProg') show(cur + 1);
+    });
+    pause.addEventListener('click', () => {
+      const paused = pause.getAttribute('aria-pressed') !== 'true';
+      pause.setAttribute('aria-pressed', String(paused));
+      pause.setAttribute('aria-label', paused ? 'Play slides' : 'Pause slides');
+      slides.classList.toggle('is-paused', paused);
+    });
+    if (!reduceMotion) slides.classList.add('is-auto');
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => slides.classList.toggle('is-offscreen', !e.isIntersecting))
+        .observe(slides.closest('.hero'));
+    }
+  }
+
+  // Framing engine. Each photo with data-focus="L T R B" (its subject box, in % of the
+  // image) gets the object-position that keeps the subject inside its frame and clear of
+  // anything drawn over it, scored on a 65 x 65 grid of the crop's sliding room.
+  const heroSec = document.querySelector('.hero');
+  const stacked = window.matchMedia('(max-width: 900px)');
+  const OBSTACLES = '.hero-inner > *, .hero-ctrl, .site-header .brand, .site-header .header-live, .site-header .burger, .site-header .nav > a';
+  const overlap = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+
+  const frame = () => {
+    if (!heroSec) return;
+    // On tablets and phones the photo is a band above the copy, ending just under the slide controls
+    const anchor = heroSec.querySelector('.hero-slides') || heroSec.querySelector('.hero-inner > *');
+    const top = (el) => { let y = 0; for (; el && el !== heroSec; el = el.offsetParent) y += el.offsetTop; return y; };
+    // the photo runs on under the slide controls so its fade ends where the copy starts
+    const end = anchor.classList.contains('hero-slides') ? top(anchor) + anchor.offsetHeight + 8 : top(anchor) + 24;
+    if (stacked.matches) heroSec.style.setProperty('--photo-h', `${end}px`);
+    else heroSec.style.removeProperty('--photo-h');
+
+    const host = heroSec.getBoundingClientRect();
+    // text counts line by line, so a short line leaves the photo beside it free
+    const rectsOf = (el) => {
+      if (/^(H1|P)$/.test(el.tagName)) { const range = document.createRange(); range.selectNodeContents(el); return [...range.getClientRects()]; }
+      if (el.matches('.hero-actions, .hero-stats')) return [...el.children].map((c) => c.getBoundingClientRect());
+      return [el.getBoundingClientRect()];
+    };
+    const obstacles = [...document.querySelectorAll(OBSTACLES)].flatMap((el) => {
+      if (getComputedStyle(el).visibility === 'hidden') return [];
+      // the header is fixed: frame against where it sits with the page at the top;
+      // copy still rising in is measured where it will land
+      const tf = getComputedStyle(el).transform;
+      const rise = tf === 'none' ? 0 : new DOMMatrix(tf).m42;
+      const dy = (el.closest('.site-header') ? -host.top - window.scrollY : -host.top) - rise;
+      return rectsOf(el).filter((r) => r.width && r.height)
+        .map((r) => ({ l: r.left - host.left, t: r.top + dy, r: r.right - host.left, b: r.bottom + dy }));
+    });
+
+    heroSec.querySelectorAll('img[data-focus]').forEach((img) => {
+      if (img.dataset.pos0 === undefined) img.dataset.pos0 = img.style.objectPosition;
+      if (img.dataset.focusOn === 'stacked' && !stacked.matches) { img.style.objectPosition = img.dataset.pos0; return; }
+      // layout size, not the zoomed size, so the settle animation never moves the crop
+      const fw = img.offsetWidth, fh = img.offsetHeight;
+      const nw = Number(img.getAttribute('width')) || img.naturalWidth;
+      const nh = Number(img.getAttribute('height')) || img.naturalHeight;
+      if (!fw || !fh || !nw || !nh) return;
+      const fx = img.offsetLeft + img.offsetParent.offsetLeft, fy = top(img);
+      const s = Math.max(fw / nw, fh / nh), rw = nw * s, rh = nh * s;
+      const [L, T, R, B] = img.dataset.focus.split(' ').map((v) => v / 100);
+      const obs = obstacles.map((o) => ({ l: o.l - fx, t: o.t - fy, r: o.r - fx, b: o.b - fy }));
+      if (stacked.matches) obs.push({ l: 0, t: fh * 0.7, r: fw, b: fh }); // the fade into the copy
+      const view = { l: 0, t: 0, r: fw, b: fh };
+      let best = [0, 0], bestCost = Infinity;
+      for (let i = 0; i <= 64; i++) {
+        for (let j = 0; j <= 64; j++) {
+          const ox = (fw - rw) * i / 64, oy = (fh - rh) * j / 64;
+          const sub = { l: ox + L * rw, t: oy + T * rh, r: ox + R * rw, b: oy + B * rh };
+          const area = (sub.r - sub.l) * (sub.b - sub.t);
+          const covered = obs.reduce((sum, o) => sum + overlap(sub, o), 0);
+          const dx = ((sub.l + sub.r) / 2 - fw / 2) / fw, dy = ((sub.t + sub.b) / 2 - fh / 2) / fh;
+          const cost = 1000 * (area - overlap(sub, view) + covered) + dx * dx + dy * dy;
+          if (cost < bestCost) { bestCost = cost; best = [ox, oy]; }
+        }
+      }
+      img.style.objectPosition = `${best[0].toFixed(1)}px ${best[1].toFixed(1)}px`;
+    });
+  };
+  if (heroSec && heroSec.querySelector('img[data-focus]')) {
+    frame();
+    heroSec.querySelectorAll('img[data-focus]').forEach((img) => img.addEventListener('load', frame));
+    if (document.fonts) document.fonts.ready.then(frame);
+    window.addEventListener('load', () => setTimeout(frame, 1100));
+    let rt;
+    const later = () => { clearTimeout(rt); rt = setTimeout(frame, 120); };
+    window.addEventListener('resize', later);
+    // once the copy has risen into place, frame against where it actually sits
+    heroSec.querySelector('.hero-inner').addEventListener('transitionend', (e) => {
+      if (e.propertyName === 'transform' && e.target.parentElement.classList.contains('hero-inner')) later();
+    });
+  }
+
+  // Partner logos on tablets and phones: a slow drift to the left that the visitor can grab
+  // and swipe either way. Three copies of the set let it loop seamlessly in both directions.
+  const strip = document.querySelector('.partner-logos');
+  const phoneStrip = window.matchMedia('(max-width: 900px)');
+  if (strip) {
+    const originals = [...strip.children];
+    let clones = [], raf = 0, last = 0, pos = 0, held = false, holdUntil = 0, onScreen = false, lastSet = -1;
+    const period = () => (clones.length ? clones[0].offsetLeft - originals[0].offsetLeft : 0);
+    const wrapAround = () => {
+      const p = period();
+      if (!p) return;
+      if (strip.scrollLeft < p * 0.5) strip.scrollLeft += p;
+      else if (strip.scrollLeft >= p * 1.5) strip.scrollLeft -= p;
+      pos = strip.scrollLeft;
+    };
+    const step = (now) => {
+      raf = requestAnimationFrame(step);
+      const dt = Math.min(48, now - (last || now));
+      last = now;
+      if (held || now < holdUntil) { pos = strip.scrollLeft; return; }
+      pos += dt * 0.03; // 30px a second
+      strip.scrollLeft = pos;
+      lastSet = strip.scrollLeft;
+      wrapAround();
+    };
+    const run = () => {
+      const go = phoneStrip.matches && onScreen && !reduceMotion && !document.hidden;
+      if (go && !raf) { last = 0; raf = requestAnimationFrame(step); }
+      if (!go && raf) { cancelAnimationFrame(raf); raf = 0; }
+    };
+    const setup = () => {
+      if (phoneStrip.matches && !clones.length) {
+        clones = [0, 1].flatMap(() => originals.map((li) => {
+          const c = li.cloneNode(true);
+          c.setAttribute('aria-hidden', 'true');
+          c.querySelector('img').alt = '';
+          strip.append(c);
+          return c;
+        }));
+        strip.scrollLeft = period();
+        pos = strip.scrollLeft;
+      } else if (!phoneStrip.matches && clones.length) {
+        clones.forEach((c) => c.remove());
+        clones = [];
+      }
+      run();
+    };
+    // the visitor takes over while touching, and for a moment after letting go
+    const release = () => { held = false; holdUntil = performance.now() + 1600; };
+    strip.addEventListener('pointerdown', () => { held = true; });
+    strip.addEventListener('touchstart', () => { held = true; }, { passive: true });
+    ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach((ev) => strip.addEventListener(ev, release, { passive: true }));
+    strip.addEventListener('wheel', () => { holdUntil = performance.now() + 1600; }, { passive: true });
+    strip.addEventListener('scroll', () => {
+      if (Math.abs(strip.scrollLeft - lastSet) > 2) { holdUntil = Math.max(holdUntil, performance.now() + 900); wrapAround(); }
+    }, { passive: true });
+    // mouse drag on touch-less tablets and desktop browsers at phone width
+    let dragX = null;
+    strip.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') { dragX = e.clientX; strip.setPointerCapture(e.pointerId); } });
+    strip.addEventListener('pointermove', (e) => {
+      if (dragX === null) return;
+      strip.scrollLeft -= e.clientX - dragX;
+      dragX = e.clientX;
+    });
+    strip.addEventListener('pointerup', () => { dragX = null; });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(strip);
+    } else onScreen = true;
+    document.addEventListener('visibilitychange', run);
+    phoneStrip.addEventListener('change', setup);
+    setup();
+  }
+
+  // WhatsApp button: arrives once the visitor scrolls past the first half of the hero,
+  // sends out its wave, and on touch screens shows its label once
+  const wa = document.querySelector('.wa-float');
+  if (wa) {
+    let shown = false;
+    const onScrollWa = () => {
+      if (shown || window.scrollY < window.innerHeight * 0.5) return;
+      shown = true;
+      wa.classList.add('is-on');
+      window.removeEventListener('scroll', onScrollWa);
+      if (window.matchMedia('(hover: none)').matches) {
+        setTimeout(() => wa.classList.add('is-tip'), 1400);
+        setTimeout(() => wa.classList.remove('is-tip'), 5400);
+      }
+    };
+    window.addEventListener('scroll', onScrollWa, { passive: true });
+    onScrollWa();
+  }
+
+  // Subtle parallax on the hero photo
   const heroImg = document.querySelector('.hero-visual');
   if (heroImg && !reduceMotion && window.matchMedia('(hover: hover) and (min-width: 901px)').matches) {
     let ticking = false;

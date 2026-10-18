@@ -1,0 +1,45 @@
+{
+  "source": "Google Maps",
+  "fetched": "2026-10-18",
+  "rating": 4.8,
+  "count": 4,
+  "place_url": "https://www.google.com/maps/place/?q=place_id:ChIJ-_zh-MOlMRkROCok0CqIT1Y",
+  "reviews": [
+    {
+      "name": "Sibongile Mudiriza",
+      "photo": "https://lh3.googleusercontent.com/a/ACg8ocL0y76nt96badIKpZUSMiOUDduRkvNpg9UUJQduNs661dz3RA=s120-c-rp-mo-br100",
+      "local_guide": true,
+      "rating": 5.0,
+      "text": "One of the best Electrical firms in Zimbabwe.",
+      "when": "Jan 2025",
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSURfM2RMU21nRRAB!2m1!1s0x0:0x564f882ad0242a38!3m1!1s2@1:CIHM0ogKEICAgID_3dLSmgE%7C%7C?hl=en-US"
+    },
+    {
+      "name": "brian nyamvura",
+      "photo": "https://lh3.googleusercontent.com/a/ACg8ocK3Lsj7MvSy-YGeboHnr-d5pdIZhXOKcVFPyyWlFpdG5D5F82Gc=s120-c-rp-mo-ba12-br100",
+      "local_guide": true,
+      "rating": 5.0,
+      "text": "Excellent",
+      "when": "Nov 2025",
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xOd1VXWllXalJNVjA1RU5HeDBlVTlGYlhGNFVXYxAB!2m1!1s0x0:0x564f882ad0242a38!3m1!1s2@1:CAIQACodChtycF9oOlNwUWZYWjRMV05ENGx0eU9FbXF4UWc%7C%7C?hl=en-US"
+    },
+    {
+      "name": "thomson jim",
+      "photo": "https://lh3.googleusercontent.com/a-/ALV-UjWXcADoY2DI8NJ83RvGu3wY_nS2o_WV46YJ8J3mFhBcIy5dxqhm=s120-c-rp-mo-ba12-br100",
+      "local_guide": true,
+      "rating": 5.0,
+      "text": "",
+      "when": "Oct 2025",
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2twRVN6ZFlXVlkwYWtoUmNuWjRaM2xEVFVVMk5FRRAB!2m1!1s0x0:0x564f882ad0242a38!3m1!1s2@1:CAIQACodChtycF9oOkpESzdYWVY0akhRcnZ4Z3lDTUU2NEE%7C%7C?hl=en-US"
+    },
+    {
+      "name": "Joel Emmanuel Mushongwi",
+      "photo": "https://lh3.googleusercontent.com/a-/ALV-UjU24_xsbe7ISbpHBdZDDuQiNqZDGODIKkJTuu6e5hv5Jyxq9ak=s120-c-rp-mo-ba12-br100",
+      "local_guide": true,
+      "rating": 4.0,
+      "text": "",
+      "when": "Jul 2024",
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUNybTVuZTl3RRAB!2m1!1s0x0:0x564f882ad0242a38!3m1!1s2@1:CIHM0ogKEICAgICrm5ne9wE%7C%7C?hl=en-US"
+    }
+  ]
+}

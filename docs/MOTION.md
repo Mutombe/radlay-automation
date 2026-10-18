@@ -4,7 +4,7 @@
 Motion here should feel measured and competent: things are drawn, filled and switched, never bounced or spun.
 
 **Signature moments (two per site, no more):** the plant schematic draws itself; the process line fills step by step.
-**Continuous motion budget:** one effect, the power and signal flows in the schematic. It stops when off screen and has a Pause control.
+**Continuous motion budget:** the power and signal flows in the schematic, the hero slides and the partner strip on phones. Each stops off screen; the flows and slides have Pause controls, and the strip stops the moment a visitor touches it.
 **Not used, on purpose:** number counters (no verified metrics to count), cursor-following effects, scroll hijacking, pinned sections, 3D scenes, bounce easing.
 
 ## Tokens (`assets/css/styles.css`, `:root`)
@@ -32,7 +32,11 @@ Linear easing is reserved for the process line and the flows, where constant spe
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Hero entrance | Reading order on arrival | Eyebrow, title, lead, actions, stats fade + rise in sequence | Same, 12px travel | 500ms enter, 70ms stagger | Once | Shown immediately | Visible |
 | Hero parallax | Depth on the gear photo | Photo drifts at 0.18× scroll | Off | Scroll-linked, one write per frame | Continuous while in hero | Off | Static |
-| Hero photo settle | Atmosphere | Scale 1.1 to 1 | Same | 18s | Once | Instant | Static |
+| Hero photo settle | Atmosphere (inner pages) | Scale 1.1 to 1 | Same | 18s | Once | Instant | Static |
+| Hero slides (home) | Shows the three disciplines | Photos crossfade every 7s; the gold bar under the active slide is the timer; each photo settles from 1.06 while on | Same; photo sits in its own band above the copy and dissolves into the navy | 800ms in-out fade, 7.6s settle | Loops while on screen; Pause button, hover and keyboard focus hold it | No auto-advance, dots still work, Pause hidden | First photo only, controls hidden |
+| Partner strip (phones, tablets) | Shows all four brands without wrapping | Static row | Drifts left at 30px/s and loops; swipe or drag either way, drift resumes 1.6s after letting go | Linear | Continuous while on screen | No drift, still swipeable | Static scrollable row |
+| eWatch shortcut trace | Draws attention to the live demo once | n/a | Trace line in the header button draws itself | 1.2s standard, 600ms delay | Once | Drawn | Drawn |
+| WhatsApp button | Contact without hunting for it | Appears after half a screen of scrolling; three gold waves roll out; label slides out on hover | Same; label shows once for 4s instead of on hover | 240ms enter, 1.8s waves | Waves 3 times, then still | Appears, no waves | Always visible |
 | Scroll reveal | Structure and rhythm | Fade + rise when 15% visible | Same, shorter travel | 500ms enter | Once per element | Shown immediately | Visible (hidden state needs `.js`) |
 | Card stagger | Group reads as one set | Children offset 70ms | 50ms | Ease-enter | Once | Instant | Visible |
 | **Schematic draw** | Shows the plant as an engineering drawing; explains what connects to what | Outlines plot in order: supply and solar, MCC, gateway, cloud, tank, line; fills, labels, flows and hotspots follow | Same sequence, 900ms | 1100ms standard, 110ms between groups, 350ms hold | Once | Drawn immediately | Drawn |
