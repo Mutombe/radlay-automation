@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plant Solutions | Radlay Automation</title>
+  <meta name="description" content="eWatch Online, plant modernisation, OEE and remote monitoring, plant audits and environmental management systems.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/img/radlay-mark.svg" type="image/svg+xml">
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preload" href="assets/fonts/GeneralSans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/IBMPlexMono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Radlay Automation home">
+      <img class="logo-dark" src="assets/img/radlay-logo.svg" alt="Radlay Automation" width="2670" height="1080">
+      <img class="logo-light" src="assets/img/radlay-logo-white.svg" alt="" width="2670" height="1080" aria-hidden="true">
+    </a>
+    <nav class="nav" id="nav" aria-label="Primary">
+      <a href="capabilities.html">Capabilities</a>
+      <a href="solutions.html" aria-current="page">Plant Solutions</a>
+      <a href="products.html">Products</a>
+      <a href="projects.html">Projects</a>
+      <a href="company.html">Company</a>
+      <a class="nav-login-mobile" href="login.html">Client Login</a>
+      <a class="btn btn-gold nav-cta-mobile" href="company.html#contact">Start a Project <span class="arr">→</span></a>
+    </nav>
+    <a class="header-login" href="login.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Client Login</a>
+    <a class="btn btn-gold btn-sm header-cta" href="company.html#contact">Start a Project <span class="arr">→</span></a>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ PAGE HERO ============ -->
+<section class="hero page-hero">
+  <div class="hero-visual" aria-hidden="true">
+    <img class="hero-photo" src="assets/img/auto-plc-panel.jpg" alt="" fetchpriority="high" style="object-position:50% 50%">
+  </div>
+  <div class="wrap hero-inner">
+    <p class="crumbs reveal"><a href="index.html">Home</a><span class="sep">/</span><span aria-current="page">Plant Solutions</span></p>
+    <p class="eyebrow reveal">Industrial plant solutions</p>
+    <h1 class="hero-title reveal">Find the fault before<br><span class="hl">it stops the line.</span></h1>
+    <p class="hero-lead reveal">We modernise ageing plants and put live data in your hands, so decisions are made on facts, not guesswork.</p>
+  </div>
+</section>
+
+<!-- ============ PLANT SOLUTIONS (navy) ============ -->
+<section class="section solutions" id="ewatch-live">
+  <div class="wrap">
+    <div class="sol-head">
+      <div>
+        <p class="eyebrow eyebrow-light reveal">eWatch Online</p>
+        <h2 class="sec-title reveal">Your whole plant,<br>live on any screen.</h2>
+      </div>
+      <div class="sol-intro reveal">
+        <p class="sec-lead">Availability, performance, quality and alarms for every line, streamed to the people who need them.</p>
+        <p class="sol-hint"><i aria-hidden="true"></i>Pick a point on the plant</p>
+      </div>
+    </div>
+
+    <div class="hmi reveal" data-hmi data-active="0">
+      <div class="hmi-bar">
+        <span class="hmi-live"><i></i>eWatch · Plant overview</span>
+        <span class="hmi-path">Site 01 / Line 02 · illustrative</span>
+        <span class="hmi-clock" data-clock>00:00:00</span>
+      </div>
+
+      <div class="hmi-body">
+        <div class="hmi-map">
+          <div class="plant-wrap">
+          <svg class="plant" viewBox="0 0 1000 560" role="img" aria-labelledby="plantTitle">
+            <title id="plantTitle">Schematic of a plant: incomer and transformer, energy meter, solar array, motor control centre with PLC and gateway, motor and conveyor line, process tank with instruments, and the eWatch cloud.</title>
+            <defs>
+              <pattern id="hmiGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/></pattern>
+            </defs>
+            <rect width="1000" height="560" fill="url(#hmiGrid)"/>
+
+            <!-- 05 incomer + transformer -->
+            <g class="part" data-part="4">
+              <path class="s-line" d="M90 230V308"/>
+              <path class="s-line" d="M78 230h24M82 222h16"/>
+              <circle class="s-line s-fill" cx="90" cy="330" r="22"/>
+              <circle class="s-line s-fill" cx="90" cy="362" r="22"/>
+              <text class="s-label" x="126" y="322">TX-01</text>
+              <text class="s-label dim" x="126" y="338">11 / 0.4 kV</text>
+              <text class="s-label dim" x="56" y="212">MV incomer</text>
+            </g>
+
+            <!-- 06 energy meter + solar -->
+            <g class="part" data-part="5">
+              <path class="s-line" d="M90 384V430"/>
+              <rect class="s-line s-fill" x="40" y="430" width="100" height="50" rx="3"/>
+              <rect class="s-screen" x="52" y="440" width="76" height="18" rx="1"/>
+              <text class="s-digits" x="90" y="453" text-anchor="middle">2 418 kWh</text>
+              <text class="s-label" x="40" y="500">EM-01 · energy</text>
+              <g class="solar">
+                <polygon class="s-line s-fill" points="60,130 84,70 124,70 100,130"/>
+                <polygon class="s-line s-fill" points="108,130 132,70 172,70 148,130"/>
+                <polygon class="s-line s-fill" points="156,130 180,70 220,70 196,130"/>
+                <polygon class="s-line s-fill" points="204,130 228,70 268,70 244,130"/>
+                <path class="s-line thin" d="M72 100h40M120 100h40M168 100h40M216 100h40"/>
+              </g>
+              <text class="s-label" x="60" y="154">PV array</text>
+              <path class="s-line" d="M176 130V190"/>
+              <rect class="s-line s-fill" x="150" y="190" width="56" height="40" rx="3"/>
+              <path class="s-line thin" d="M160 212c6-12 12-12 18 0s12 12 18 0"/>
+              <text class="s-label dim" x="214" y="214">INV-01</text>
+            </g>
+
+            <!-- power flows into the MCC -->
+            <path class="s-cable" d="M112 346H300"/>
+            <path class="s-flow" d="M112 346H300"/>
+            <path class="s-cable" d="M178 230V300H300"/>
+            <path class="s-flow slow" d="M178 230V300H300"/>
+
+            <!-- 02 MCC / PLC -->
+            <g class="part" data-part="1">
+              <rect class="s-line s-fill" x="300" y="270" width="120" height="180" rx="3"/>
+              <path class="s-line thin" d="M340 270v180M380 270v180M300 300h120"/>
+              <circle class="s-led ok" cx="320" cy="285" r="4"/><circle class="s-led ok" cx="360" cy="285" r="4"/><circle class="s-led warn" cx="400" cy="285" r="4"/>
+              <rect class="s-line thin" x="348" y="320" width="24" height="34" rx="2"/>
+              <path class="s-line thin" d="M312 330h16M312 342h16M312 354h16M392 330h16M392 342h16M392 354h16"/>
+              <text class="s-label" x="300" y="474">MCC-01 · PLC</text>
+            </g>
+
+            <!-- 04 gateway + signal bus -->
+            <g class="part" data-part="3">
+              <path class="s-line" d="M360 270V226"/>
+              <circle class="s-line s-fill" cx="360" cy="220" r="6"/>
+              <path class="s-line thin" d="M346 206a20 20 0 0 1 28 0M338 198a31 31 0 0 1 44 0"/>
+              <path class="s-signal" d="M360 214V120H760M660 120V176M760 120V306M450 360H420"/>
+              <text class="s-label dim" x="384" y="112">I/O signal bus</text>
+            </g>
+
+            <!-- 01 eWatch cloud + uplink -->
+            <g class="part" data-part="0">
+              <path class="s-signal uplink" d="M368 210C470 40 690 30 826 84"/>
+              <path class="s-line s-fill" d="M836 110h104a22 22 0 0 0 0-44 34 34 0 0 0-64-12 26 26 0 0 0-40 26 15 15 0 0 0 0 30z"/>
+              <text class="s-label" x="836" y="138">eWatch cloud</text>
+              <rect class="s-line thin" x="900" y="152" width="46" height="30" rx="2"/>
+              <path class="s-line thin" d="M894 186h58"/>
+              <rect class="s-line thin" x="872" y="158" width="18" height="28" rx="3"/>
+              <path class="s-signal" d="M890 120V150"/>
+            </g>
+
+            <!-- process tank, pump and instruments -->
+            <g class="part" data-part="6">
+              <rect class="s-line s-fill" x="560" y="150" width="80" height="150" rx="10"/>
+              <rect class="s-level" x="566" y="214" width="68" height="80" rx="6"/>
+              <path class="s-line" d="M600 300v40h84"/>
+              <circle class="s-line s-fill" cx="700" cy="340" r="16"/>
+              <path class="s-line thin" d="M692 332l16 8-16 8z"/>
+              <path class="s-line" d="M716 340h84V300"/>
+              <text class="s-label" x="560" y="140">TK-02</text>
+              <g class="isa"><circle cx="660" cy="190" r="15"/><text x="660" y="194">LT</text></g>
+              <path class="s-line thin" d="M640 190h5"/>
+              <g class="isa"><circle cx="760" cy="320" r="15"/><text x="760" y="324">PT</text></g>
+              <path class="s-line thin" d="M760 335v5"/>
+            </g>
+
+            <!-- 03 motor, conveyor and packing -->
+            <path class="s-cable" d="M420 400H520"/>
+            <path class="s-flow" d="M420 400H520"/>
+            <g class="part" data-part="2">
+              <rect class="s-line s-fill" x="520" y="376" width="72" height="48" rx="4"/>
+              <path class="s-line thin" d="M532 376v48M544 376v48M556 376v48M568 376v48"/>
+              <circle class="s-line s-fill" cx="600" cy="400" r="10"/>
+              <text class="s-label" x="520" y="366">M-03</text>
+              <g class="isa"><circle cx="465" cy="360" r="15"/><text x="465" y="364">TT</text></g>
+              <rect class="s-line s-fill" x="610" y="440" width="250" height="30" rx="15"/>
+              <g class="rollers"><circle cx="630" cy="455" r="7"/><circle cx="672" cy="455" r="7"/><circle cx="714" cy="455" r="7"/><circle cx="756" cy="455" r="7"/><circle cx="798" cy="455" r="7"/><circle cx="840" cy="455" r="7"/></g>
+              <g class="products"><rect x="626" y="418" width="22" height="22" rx="2"/><rect x="706" y="418" width="22" height="22" rx="2"/><rect x="786" y="418" width="22" height="22" rx="2"/></g>
+              <path class="s-line" d="M600 410l18 34"/>
+              <rect class="s-line s-fill" x="870" y="376" width="96" height="94" rx="3"/>
+              <path class="s-line thin" d="M870 400h96"/>
+              <text class="s-label" x="884" y="393">Packing</text>
+              <text class="s-digits big" x="918" y="440" text-anchor="middle">87%</text>
+              <text class="s-label dim" x="918" y="458" text-anchor="middle">OEE</text>
+              <text class="s-label" x="610" y="500">Line 02 · conveyor</text>
+            </g>
+          </svg>
+
+          <button class="hot" type="button" style="--x:88%;--y:15.5%" data-sol="0" aria-label="01 eWatch Online"><span>01</span></button>
+          <button class="hot" type="button" style="--x:36%;--y:65%" data-sol="1" aria-label="02 Plant Modernisations"><span>02</span></button>
+          <button class="hot" type="button" style="--x:91.8%;--y:61%" data-sol="2" aria-label="03 OEE Plant Monitoring"><span>03</span></button>
+          <button class="hot" type="button" style="--x:36%;--y:31%" data-sol="3" aria-label="04 Remote Monitoring"><span>04</span></button>
+          <button class="hot" type="button" style="--x:9%;--y:59%" data-sol="4" aria-label="05 Plant Audits"><span>05</span></button>
+          <button class="hot" type="button" style="--x:23%;--y:13%" data-sol="5" aria-label="06 Environmental Management System"><span>06</span></button>
+          </div>
+          <p class="map-swipe" aria-hidden="true">Swipe to see the whole plant →</p>
+        </div>
+
+        <div class="hmi-read" id="solReadout" aria-live="polite">
+          <article class="read" data-panel="0">
+            <p class="read-k"><span>01</span>Cloud platform</p>
+            <h3>eWatch Online</h3>
+            <p>Cloud dashboards for your plant, viewable from any device.</p>
+            <ul class="read-list"><li>Live dashboards on phone, tablet or PC</li><li>Shift and line reports, sent automatically</li><li>Access set per manager, engineer and operator</li></ul>
+            <div class="widget"><p class="w-k">Example · last 60 min</p>
+              <div class="w-row"><b>3 devices online</b><span class="w-ok">Synced 2 s ago</span></div>
+              <svg class="w-spark" viewBox="0 0 240 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 L20 30 L40 32 L60 22 L80 26 L100 18 L120 23 L140 15 L160 19 L180 12 L200 16 L220 9 L240 12" fill="none" stroke="#f0b10a" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+            </div>
+          </article>
+          <article class="read" data-panel="1">
+            <p class="read-k"><span>02</span>Controls upgrade</p>
+            <h3>Plant Modernisations</h3>
+            <p>Legacy controls upgraded without losing production.</p>
+            <ul class="read-list"><li>Phased cut-overs during planned shutdowns</li><li>Obsolete PLCs and relay logic replaced</li><li>Programs documented at handover</li></ul>
+            <div class="widget"><p class="w-k">Example · before and after</p>
+              <div class="w-compare"><div><small>Before</small><b>Relay logic</b><span>Paper logs, fault-finding by hand</span></div><i aria-hidden="true">→</i><div class="after"><small>After</small><b>PLC + HMI</b><span>Live data, alarms, remote access</span></div></div>
+            </div>
+          </article>
+          <article class="read" data-panel="2">
+            <p class="read-k"><span>03</span>Line performance</p>
+            <h3>OEE Plant Monitoring</h3>
+            <p>Availability, performance and quality, tracked per line.</p>
+            <ul class="read-list"><li>Downtime logged with a reason code</li><li>OEE per line, per shift, per product</li><li>Bottlenecks visible at a glance</li></ul>
+            <div class="widget"><p class="w-k">Example · Line 02 today</p>
+              <div class="w-oee">
+                <div class="w-ring"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="32"/><circle class="on" cx="40" cy="40" r="32" pathLength="100" style="--v:87"/></svg><b>87<small>% OEE</small></b></div>
+                <ul class="w-bars"><li><span>Availability</span><i style="--v:94"></i><b>94%</b></li><li><span>Performance</span><i style="--v:93"></i><b>93%</b></li><li><span>Quality</span><i style="--v:99"></i><b>99%</b></li></ul>
+              </div>
+            </div>
+          </article>
+          <article class="read" data-panel="3">
+            <p class="read-k"><span>04</span>Alarms off-site</p>
+            <h3>Remote Monitoring</h3>
+            <p>Alarms and trends delivered before a fault becomes downtime.</p>
+            <ul class="read-list"><li>Alarms by SMS, email and dashboard</li><li>Trends to spot a failing bearing early</li><li>Remote diagnostics before anyone drives to site</li></ul>
+            <div class="widget"><p class="w-k">Example · active alarms</p>
+              <ul class="w-alarms"><li class="hi"><b>M-03</b><span>Motor temp high · 88 °C</span><em>Now</em></li><li class="mid"><b>PT-04</b><span>Discharge pressure low</span><em>4 min</em></li><li><b>TK-02</b><span>Level restored · acknowledged</span><em>12 min</em></li></ul>
+            </div>
+          </article>
+          <article class="read" data-panel="4">
+            <p class="read-k"><span>05</span>Health checks</p>
+            <h3>Plant Audits</h3>
+            <p>Electrical, energy and control-system health checks.</p>
+            <ul class="read-list"><li>Load, harmonics and power factor logging</li><li>Thermal inspection of boards and terminations</li><li>A prioritised list of what to fix first</li></ul>
+            <div class="widget"><p class="w-k">Example · power factor</p>
+              <div class="w-pf"><div><small>Measured</small><b>0.78</b></div><div class="track"><i class="m" style="--v:78"></i><i class="t" style="--v:95"></i></div><div><small>Target</small><b>0.95</b></div></div>
+              <p class="w-note">A low power factor means utility penalties and overloaded cables. Correction pays back fast.</p>
+            </div>
+          </article>
+          <article class="read" data-panel="5">
+            <p class="read-k"><span>06</span>Energy &amp; compliance</p>
+            <h3>Environmental Management System</h3>
+            <p>Measure and report emissions, energy and compliance.</p>
+            <ul class="read-list"><li>Energy metered per area and per line</li><li>Emissions reported every month</li><li>Records ready for audits and compliance</li></ul>
+            <div class="widget"><p class="w-k">Example · energy, last 6 months</p>
+              <div class="w-cols"><i style="--v:82"></i><i style="--v:76"></i><i style="--v:79"></i><i style="--v:68"></i><i style="--v:64"></i><i class="now" style="--v:58"></i></div>
+              <div class="w-row"><span>May</span><span>Oct</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="hmi-tabs" role="group" aria-label="Plant solutions">
+        <button type="button" data-sol="0"><span>01</span>eWatch Online</button>
+        <button type="button" data-sol="1"><span>02</span>Plant Modernisations</button>
+        <button type="button" data-sol="2"><span>03</span>OEE Monitoring</button>
+        <button type="button" data-sol="3"><span>04</span>Remote Monitoring</button>
+        <button type="button" data-sol="4"><span>05</span>Plant Audits</button>
+        <button type="button" data-sol="5"><span>06</span>Environmental Mgmt</button>
+      </div>
+    </div>
+
+      <p class="pill pill-gold reveal">Innovation + value addition</p>
+  </div>
+</section>
+
+
+<!-- ============ OEE ============ -->
+<section class="section oee" aria-labelledby="oee-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow reveal">What we measure</p>
+        <h2 class="sec-title reveal" id="oee-title">One number for every line.</h2>
+        <p class="sec-lead reveal">Overall Equipment Effectiveness shows how much of your planned production time is truly productive.</p>
+      </div>
+      <p class="corner-tag reveal">OEE<br>tracked live<br>on eWatch</p>
+    </div>
+    <div class="oee-eq reveal" aria-label="OEE equals availability times performance times quality">
+      <div><b>Availability</b><span>Running vs planned time</span></div><i>×</i>
+      <div><b>Performance</b><span>Actual vs ideal speed</span></div><i>×</i>
+      <div><b>Quality</b><span>Good parts vs total</span></div><i>=</i>
+      <div class="oee-total"><b>OEE</b><span>True productive time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALL SOLUTIONS ============ -->
+<section class="section sol-all" aria-labelledby="sol-all-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow reveal">Six solutions</p>
+        <h2 class="sec-title reveal" id="sol-all-title">Built for plants that run around the clock.</h2>
+      </div>
+      <p class="corner-tag reveal">Innovation<br>+ value<br>addition</p>
+    </div>
+    <div class="sol-cards">
+      <article class="sol-card reveal" id="ewatch"><span class="sol-card-n">01</span><h3>eWatch Online</h3><p>Cloud dashboards for your plant, viewable from any device.</p><ul class="checks"><li>Live production data</li><li>Any device, anywhere</li><li>Shift and line reports</li></ul></article>
+      <article class="sol-card reveal" id="modernisation"><span class="sol-card-n">02</span><h3>Plant Modernisations</h3><p>Legacy controls upgraded without losing production.</p><ul class="checks"><li>Phased cut-overs</li><li>Obsolete PLC replacement</li><li>Documented as-builts</li></ul></article>
+      <article class="sol-card reveal" id="oee"><span class="sol-card-n">03</span><h3>OEE Plant Monitoring</h3><p>Availability, performance and quality, tracked per line.</p><ul class="checks"><li>Downtime reason codes</li><li>Line-by-line OEE</li><li>Bottleneck analysis</li></ul></article>
+      <article class="sol-card reveal" id="remote"><span class="sol-card-n">04</span><h3>Remote Monitoring</h3><p>Alarms and trends delivered before a fault becomes downtime.</p><ul class="checks"><li>Alarm notifications</li><li>Historical trends</li><li>Remote diagnostics</li></ul></article>
+      <article class="sol-card reveal" id="audits"><span class="sol-card-n">05</span><h3>Plant Audits</h3><p>Electrical, energy and control-system health checks.</p><ul class="checks"><li>Load and power quality</li><li>Thermal inspection</li><li>Prioritised action list</li></ul></article>
+      <article class="sol-card reveal" id="ems"><span class="sol-card-n">06</span><h3>Environmental Management System</h3><p>Measure and report emissions, energy and compliance.</p><ul class="checks"><li>Energy metering</li><li>Emissions reporting</li><li>Compliance records</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA (its 3D mark drops behind the footer plates) ============ -->
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap cta-inner">
+    <div class="cta-copy">
+      <p class="eyebrow eyebrow-dark reveal">Let's build together</p>
+      <h2 class="cta-title reveal" id="cta-title">Watch your plant from anywhere.</h2>
+      <p class="cta-lead reveal">Book a plant audit and find out where your uptime goes.</p>
+      <div class="cta-actions reveal">
+        <a class="btn btn-navy" href="company.html#contact">Discuss Your Project <span class="arr">→</span></a>
+        <span class="v-rule v-rule-dark" aria-hidden="true"></span>
+        <a class="cta-phone" href="tel:+263715180339">Call +263 715 180 339</a>
+      </div>
+    </div>
+  </div>
+  <div class="cta-object" aria-hidden="true">
+    <div class="mark3d mark3d-cta" data-depth="30"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER: steel plates on a lit navy floor ============ -->
+<footer class="footer">
+  <div class="plates">
+    <div class="plate plate-l">
+      <div class="plate-top">
+        <a class="foot-logo" href="index.html" aria-label="Radlay Automation home"><img src="assets/img/radlay-logo.svg" alt="Radlay Automation" width="2670" height="1080" loading="lazy"></a>
+        <p class="etch">Engineering uptime<br>across industry</p>
+      </div>
+      <div class="plate-front"></div>
+    </div>
+    <div class="plate plate-c">
+      <div class="plate-top">
+        <nav class="foot-links" aria-label="Social and contact">
+          <a href="#" data-todo="linkedin-url">LinkedIn</a>
+          <a href="#" data-todo="facebook-url">Facebook</a>
+          <a href="company.html#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="plate-front"></div>
+    </div>
+    <div class="plate plate-r">
+      <div class="plate-top">
+        <p class="foot-loc">Harare / Zimbabwe</p>
+        <p class="etch">5 Isobels Lane<br>Avondale</p>
+      </div>
+      <div class="plate-front"></div>
+    </div>
+  </div>
+  <div class="floor" aria-hidden="true"></div>
+  <div class="foot-base">
+    <div class="wrap foot-base-inner">
+      <nav class="foot-sitemap" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="capabilities.html">Capabilities</a>
+        <a href="solutions.html">Plant Solutions</a>
+        <a href="products.html">Products</a>
+        <a href="projects.html">Projects</a>
+        <a href="company.html">Company</a>
+      </nav>
+      <p class="mono-label">Automation · Power · Instruments · Solar</p>
+      <p class="foot-copy">© <span id="year">2026</span> Radlay Automation. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

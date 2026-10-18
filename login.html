@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | Radlay Connect</title>
+  <meta name="description" content="Sign in to Radlay Connect, the projects, service and plant monitoring portal for Radlay Automation clients and engineers.">
+  <meta name="theme-color" content="#012257">
+  <link rel="icon" href="assets/img/radlay-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/GeneralSans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/IBMPlexMono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/connect.css">
+  <script src="assets/js/connect-db.js"></script>
+  <script>if (window.RadlayDB.auth.current()) location.replace('connect.html');</script>
+</head>
+<body class="login-body">
+
+<main class="login">
+  <section class="login-brand" aria-label="Radlay Connect">
+    <img class="login-photo" src="assets/img/stock/hero-gears-blue.jpg" alt="">
+    <div class="login-brand-inner">
+      <a class="login-logo" href="index.html" aria-label="Back to the Radlay Automation website"><img src="assets/img/radlay-logo-white.svg" alt="Radlay Automation" width="2670" height="1080"></a>
+      <div>
+        <p class="eyebrow eyebrow-light">Radlay Connect <span class="sep">/</span> Portal</p>
+        <h1 class="login-title">Every project, ticket and machine <span class="hl">in one place.</span></h1>
+        <ul class="login-points">
+          <li><b>Projects</b><span>Milestones, budgets and progress your clients can see.</span></li>
+          <li><b>Service</b><span>Tickets, equipment history and preventive schedules.</span></li>
+          <li><b>eWatch</b><span>Live OEE, power and temperature with alerts.</span></li>
+        </ul>
+      </div>
+      <p class="mono-label login-foot">Demo · data stays in this tab</p>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <a class="login-back" href="index.html">← Back to website</a>
+
+    <form class="login-form" id="loginForm" novalidate>
+      <p class="form-title">Sign in</p>
+      <p class="login-sub">Use your Radlay Connect account, or pick a demo account below.</p>
+      <label><span>Email</span><input name="email" type="email" autocomplete="username" required></label>
+      <label class="pw"><span>Password</span><input name="password" type="password" autocomplete="current-password" required><button type="button" class="pw-toggle" aria-label="Show password">Show</button></label>
+      <p class="login-error" id="loginError" role="alert" hidden></p>
+      <button class="btn btn-navy" type="submit">Sign in <span class="arr">→</span></button>
+
+      <div class="demo-accounts">
+        <p class="mono-label">Demo accounts · password demo123</p>
+        <div class="demo-grid">
+          <button type="button" class="demo" data-email="manager@radlay.demo"><b>Operations Manager</b><span>Full access: sales, projects, stock, reports</span></button>
+          <button type="button" class="demo" data-email="engineer@radlay.demo"><b>Project Engineer</b><span>Projects, service, stock and eWatch</span></button>
+          <button type="button" class="demo" data-email="client@msasafoods.demo"><b>Client: Msasa Foods</b><span>Client portal view</span></button>
+        </div>
+      </div>
+      <p class="login-switch">New client? <button type="button" class="text-btn" data-switch="register">Request portal access</button></p>
+    </form>
+
+    <form class="login-form" id="registerForm" novalidate hidden>
+      <p class="form-title">Request portal access</p>
+      <p class="login-sub">Create a client account to follow your projects and raise service requests.</p>
+      <label><span>Full name</span><input name="name" autocomplete="name" required></label>
+      <label><span>Company</span><input name="company" autocomplete="organization" required></label>
+      <label><span>Work email</span><input name="email" type="email" autocomplete="email" required></label>
+      <label><span>Password</span><input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+      <p class="login-error" id="registerError" role="alert" hidden></p>
+      <button class="btn btn-navy" type="submit">Create account <span class="arr">→</span></button>
+      <p class="login-switch">Already have an account? <button type="button" class="text-btn" data-switch="login">Sign in</button></p>
+    </form>
+  </section>
+</main>
+
+<script>
+(() => {
+  const { auth } = window.RadlayDB;
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+
+  const showError = (el, msg) => { el.textContent = msg; el.hidden = !msg; };
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(loginForm);
+    if (!f.get('email') || !f.get('password')) return showError(document.getElementById('loginError'), 'Enter your email and password.');
+    if (auth.login(f.get('email'), f.get('password'))) location.href = 'connect.html';
+    else showError(document.getElementById('loginError'), 'That email and password do not match an account.');
+  });
+
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(registerForm));
+    const err = document.getElementById('registerError');
+    if (!f.name || !f.company || !f.email) return showError(err, 'Fill in every field.');
+    if (!/^\S+@\S+\.\S+$/.test(f.email)) return showError(err, 'Enter a valid email address.');
+    if (String(f.password).length < 6) return showError(err, 'Use at least 6 characters for the password.');
+    const res = auth.register(f);
+    if (res.error) return showError(err, res.error);
+    auth.login(f.email, f.password);
+    location.href = 'connect.html';
+  });
+
+  document.querySelectorAll('.demo').forEach((btn) => btn.addEventListener('click', () => {
+    if (auth.login(btn.dataset.email, 'demo123')) location.href = 'connect.html';
+  }));
+
+  document.querySelectorAll('[data-switch]').forEach((btn) => btn.addEventListener('click', () => {
+    const toRegister = btn.dataset.switch === 'register';
+    loginForm.hidden = toRegister;
+    registerForm.hidden = !toRegister;
+    (toRegister ? registerForm : loginForm).querySelector('input').focus();
+  }));
+
+  document.querySelectorAll('.pw-toggle').forEach((btn) => btn.addEventListener('click', () => {
+    const input = btn.previousElementSibling;
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? 'Hide' : 'Show';
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  }));
+})();
+</script>
+</body>
+</html>

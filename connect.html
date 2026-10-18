@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radlay Connect</title>
+  <meta name="theme-color" content="#012257">
+  <link rel="icon" href="assets/img/radlay-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/GeneralSans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/IBMPlexMono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/connect.css">
+  <script src="assets/js/connect-db.js"></script>
+  <script>if (!window.RadlayDB.auth.current()) location.replace('login.html');</script>
+</head>
+<body class="app-body">
+
+<div class="app">
+  <aside class="side" id="side" aria-label="Main menu">
+    <a class="side-logo" href="#/dashboard" aria-label="Radlay Connect dashboard">
+      <img src="assets/img/radlay-logo-white.svg" alt="Radlay Automation" width="2670" height="1080">
+      <span>Connect</span>
+    </a>
+    <nav class="side-nav" id="sideNav"></nav>
+    <div class="side-foot">
+      <a href="index.html">← Radlay website</a>
+    </div>
+  </aside>
+  <div class="side-scrim" id="sideScrim" hidden></div>
+
+  <div class="app-main">
+    <header class="top">
+      <button class="top-menu" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="side"><span></span><span></span></button>
+      <label class="top-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="globalSearch" type="search" placeholder="Search projects, tickets, stock, articles…" autocomplete="off" aria-label="Search">
+        <div class="search-results" id="searchResults" hidden></div>
+      </label>
+      <span class="demo-chip" title="All data is stored in sessionStorage for this tab and resets when the tab closes">Demo · session data</span>
+      <div class="top-user">
+        <button class="user-btn" id="userBtn" aria-expanded="false" aria-controls="userMenu"><span class="avatar" id="avatar"></span><span class="user-meta"><b id="userName"></b><small id="userTitle"></small></span></button>
+        <div class="user-menu" id="userMenu" hidden>
+          <a href="#/settings">Settings</a>
+          <button type="button" data-action="logout">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="view" id="view" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-scrim" data-action="close-modal"></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <header class="modal-head"><h2 id="modalTitle"></h2><button class="icon-btn" data-action="close-modal" aria-label="Close">×</button></header>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="modal-scrim" data-action="close-drawer"></div>
+  <aside class="drawer-box" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <header class="modal-head"><h2 id="drawerTitle"></h2><button class="icon-btn" data-action="close-drawer" aria-label="Close">×</button></header>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="assets/js/connect.js" defer></script>
+</body>
+</html>
