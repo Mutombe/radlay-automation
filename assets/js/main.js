@@ -21,6 +21,19 @@
     el.append(face);
   });
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const narrow = window.matchMedia('(max-width: 560px)').matches;
+
+  // Play once when on screen
+  const onceVisible = (el, fn, threshold = 0.3) => {
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) { fn(); return; }
+    new IntersectionObserver((entries, obs) => {
+      if (entries.some((e) => e.isIntersecting)) { obs.disconnect(); fn(); }
+    }, { threshold }).observe(el);
+  };
+  document.querySelectorAll('.mark3d').forEach((el) => onceVisible(el, () => el.classList.add('in'), 0.2));
+
   const header = document.querySelector('.site-header');
   const burger = document.getElementById('burger');
   const nav = document.getElementById('nav');
@@ -43,10 +56,10 @@
 
   // Stagger siblings, then reveal on scroll
   document.querySelectorAll('.cap-grid, .steps, .bento, .prod-grid, .sol-cards, .values, .gallery').forEach((group) => {
-    [...group.children].forEach((el, i) => el.style.setProperty('--d', `${i * 0.085}s`));
+    [...group.children].forEach((el, i) => el.style.setProperty('--d', `${i * (narrow ? 0.05 : 0.07)}s`));
   });
   const hero = document.querySelectorAll('.hero .reveal');
-  hero.forEach((el, i) => el.style.setProperty('--d', `${0.1 + i * 0.085}s`));
+  hero.forEach((el, i) => el.style.setProperty('--d', `${0.1 + i * 0.07}s`));
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -66,6 +79,12 @@
   };
   window.addEventListener('scroll', () => { if (!sweepQueued) { sweepQueued = true; setTimeout(sweep, 150); } }, { passive: true });
 
+  // Process: the line fills and each step lights in turn
+  document.querySelectorAll('.steps').forEach((steps) => {
+    [...steps.children].forEach((li, i) => li.style.setProperty('--i', i));
+    onceVisible(steps, () => steps.classList.add('is-run'), 0.35);
+  });
+
   // Plant solutions schematic: hotspots and tabs switch the readout; cycles until touched
   const hmi = document.querySelector('[data-hmi]');
   if (hmi) {
@@ -83,27 +102,65 @@
         t.setAttribute('aria-pressed', String(on));
       });
     };
+    let manual = false;
+    let paused = false;
+    let visible = false;
     const stop = () => { clearInterval(timer); timer = null; hmi.classList.remove('cycling'); };
-    triggers.forEach((t) => t.addEventListener('click', () => { stop(); show(Number(t.dataset.sol)); }));
+    const start = () => {
+      if (timer || manual || paused || !visible || reduceMotion) return;
+      hmi.classList.add('cycling');
+      timer = setInterval(() => {
+        show((current + 1) % panels.length);
+        // restart the tab progress bar
+        hmi.classList.remove('cycling'); void hmi.offsetWidth; hmi.classList.add('cycling');
+      }, 6000);
+    };
+    triggers.forEach((t) => t.addEventListener('click', () => { manual = true; stop(); show(Number(t.dataset.sol)); }));
     hmi.addEventListener('keydown', (e) => {
       if (!e.target.matches('[data-sol]') || !['ArrowRight', 'ArrowLeft'].includes(e.key)) return;
+      manual = true;
       stop();
       show((current + (e.key === 'ArrowRight' ? 1 : panels.length - 1)) % panels.length);
       hmi.querySelector(`.hmi-tabs [data-sol="${current}"]`).focus();
     });
     show(0);
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      new IntersectionObserver((entries, obs) => {
-        if (!entries[0].isIntersecting) return;
-        obs.disconnect();
-        hmi.classList.add('cycling');
-        timer = setInterval(() => {
-          show((current + 1) % panels.length);
-          // restart the tab progress bar
-          hmi.classList.remove('cycling'); void hmi.offsetWidth; hmi.classList.add('cycling');
-        }, 6000);
-      }, { threshold: 0.35 }).observe(hmi);
+
+    // Pause stops the flows and the auto-advance; Play resumes both
+    const pauseBtn = hmi.querySelector('[data-pause]');
+    pauseBtn.addEventListener('click', () => {
+      paused = !paused;
+      hmi.classList.toggle('is-paused', paused);
+      pauseBtn.setAttribute('aria-pressed', String(paused));
+      pauseBtn.querySelector('span').textContent = paused ? 'Play' : 'Pause';
+      if (paused) stop(); else start();
+    });
+
+    // Nothing animates while the schematic is off screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        hmi.classList.toggle('is-offscreen', !visible);
+        if (visible) start(); else stop();
+      }, { threshold: 0.2 }).observe(hmi);
     }
+
+    // Draw the schematic once: power sources first, then control, cloud, process, line
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const plant = hmi.querySelector('.plant');
+      plant.querySelectorAll('.s-line').forEach((el) => el.setAttribute('pathLength', '1'));
+      ['4', '5', '1', '3', '0', '6', '2'].forEach((part, i) => {
+        plant.querySelectorAll(`[data-part="${part}"]`).forEach((g) => g.style.setProperty('--dd', `${350 + i * 110}ms`));
+      });
+      hmi.classList.add('is-drawing');
+      onceVisible(hmi, () => {
+        hmi.classList.add('is-drawn');
+        setTimeout(() => {
+          hmi.classList.remove('is-drawing', 'is-drawn');
+          plant.querySelectorAll('.s-line').forEach((el) => el.removeAttribute('pathLength'));
+        }, 2900);
+      }, 0.25);
+    }
+
     const clock = hmi.querySelector('[data-clock]');
     const tick = () => { clock.textContent = new Date().toLocaleTimeString('en-GB'); };
     tick();
@@ -112,10 +169,16 @@
 
   // Subtle parallax on the hero gears
   const heroImg = document.querySelector('.hero-visual');
-  if (heroImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (heroImg && !reduceMotion && window.matchMedia('(hover: hover) and (min-width: 901px)').matches) {
+    let ticking = false;
     window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y < window.innerHeight) heroImg.style.transform = `translateY(${y * 0.18}px)`;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < window.innerHeight) heroImg.style.transform = `translateY(${(y * 0.18).toFixed(1)}px)`;
+        ticking = false;
+      });
     }, { passive: true });
   }
 
@@ -127,10 +190,66 @@
       b.classList.toggle('is-on', b === btn);
       b.setAttribute('aria-pressed', String(b === btn));
     });
-    document.querySelectorAll('.shot').forEach((shot) => {
-      shot.hidden = cat !== 'all' && shot.dataset.cat !== cat;
+    const shots = [...document.querySelectorAll('.shot')];
+    let shown = 0;
+    shots.forEach((shot) => {
+      const match = cat === 'all' || shot.dataset.cat === cat;
+      shot.hidden = !match;
+      if (!match) return;
+      shot.style.setProperty('--fd', `${shown * 40}ms`);
+      shown += 1;
+      if (reduceMotion || !shot.classList.contains('in')) return;
+      shot.classList.remove('is-settling');
+      shot.classList.add('is-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        shot.classList.replace('is-entering', 'is-settling');
+      }));
     });
+    const count = document.getElementById('filterCount');
+    if (count) count.textContent = cat === 'all' ? `Showing all ${shots.length} projects` : `Showing ${shown} of ${shots.length} projects`;
   }));
+
+  // Contact form: inline errors in words, then an honest hand-off to the mail app
+  document.querySelectorAll('form.form').forEach((form) => {
+    const status = form.querySelector('.form-status');
+    const button = form.querySelector('button[type="submit"]');
+    const message = (input) => {
+      if (input.validity.valueMissing) return `Please add your ${input.name === 'email' ? 'email address' : input.name}.`;
+      if (input.validity.typeMismatch) return 'That email address looks incomplete.';
+      return '';
+    };
+    const clear = (input) => {
+      input.removeAttribute('aria-invalid');
+      input.parentElement.querySelector('.field-error')?.remove();
+    };
+    form.querySelectorAll('input[required]').forEach((input) => input.addEventListener('input', () => clear(input)));
+    form.addEventListener('submit', (e) => {
+      const invalid = [...form.querySelectorAll('input[required]')].filter((input) => {
+        clear(input);
+        const text = message(input);
+        if (!text) return false;
+        input.setAttribute('aria-invalid', 'true');
+        const err = document.createElement('small');
+        err.className = 'field-error';
+        err.id = `${input.name}-error`;
+        err.textContent = text;
+        input.setAttribute('aria-describedby', err.id);
+        input.after(err);
+        return true;
+      });
+      if (invalid.length) {
+        e.preventDefault();
+        status.classList.add('is-error');
+        status.textContent = invalid.length === 1 ? 'One field needs attention.' : `${invalid.length} fields need attention.`;
+        invalid[0].focus();
+        return;
+      }
+      status.classList.remove('is-error');
+      status.textContent = 'Your email app should now open with the enquiry filled in. Press send there to reach our engineers.';
+      button.setAttribute('aria-busy', 'true');
+      setTimeout(() => button.removeAttribute('aria-busy'), 1500);
+    });
+  });
 
   document.getElementById('year').textContent = new Date().getFullYear();
 })();

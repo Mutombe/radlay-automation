@@ -117,7 +117,7 @@
         <li><span class="mono-label">Visit</span><span>5 Isobels Lane, Avondale,<br>Harare, Zimbabwe</span></li>
       </ul>
     </div>
-    <form class="form reveal" id="contact" action="mailto:sales@radlay.co.zw" method="post" enctype="text/plain">
+    <form class="form reveal" id="contact" action="mailto:sales@radlay.co.zw" method="post" enctype="text/plain" novalidate>
       <p class="form-title">Start a project</p>
       <div class="form-row">
         <label><span>Name</span><input name="name" required autocomplete="name"></label>
@@ -137,6 +137,7 @@
       </fieldset>
       <label><span>Project details</span><textarea name="message" rows="4" placeholder="Site, load, timeline, the problem you want solved…"></textarea></label>
       <button class="btn btn-navy" type="submit">Send Enquiry <span class="arr">→</span></button>
+      <p class="form-status" role="status" aria-live="polite"></p>
     </form>
   </div>
 </section>
